@@ -1,0 +1,16 @@
+web:
+  build: .
+  links:
+   - db
+  ports:
+   - "30:3030"
+  volumes:
+   - .:/usr/src/app/
+  environment:
+   NODE_ENV: development
+   MONGO_URL: mongodb://127.0.0.1:27017/test
+db:
+  image: mongo:latest
+  ports:
+   - "27017:27017"
+
