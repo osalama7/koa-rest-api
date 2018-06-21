@@ -1,7 +1,10 @@
 {
-	"port": 3030,
-		"mongodb": {
+	"port": {
+		"dev": 3030,
+		"test": 3131
+	},
+	"mongodb": {
 	"url": "mongodb://localhost:27017",
 			"dbName": "rest-boilerplate-dc"
-}
+	}
 }
