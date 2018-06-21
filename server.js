@@ -8,7 +8,6 @@ const router = require('./api/src/router');
 const Config = require('./config/config');
 
 
-// x-response-time
 app.env = 'dev';
 
 //attaching mongodb connection
