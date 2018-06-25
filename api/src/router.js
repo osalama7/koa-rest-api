@@ -17,6 +17,9 @@ module.exports = router
 		.get('/items', async (ctx, next) => {
 			ctx.body = await CrudModule.getAllItems(ctx);
 		})
+		.get('/itemswithin', async (ctx, next) => {
+			ctx.body = await CrudModule.getItemsWithinBox(ctx);
+		})
 		.put('/item/:id', async (ctx, next) => {
 			ctx.body = await CrudModule.getAndUpdateItem(ctx);
 

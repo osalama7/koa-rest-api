@@ -9,15 +9,22 @@ let getHome = async(ctx) => {
 };
 
 let addOneItem = async (ctx) => {
+	const Item = require('./schema');
+	let itemToSave = new Item();
 	let response = {};
 	ctx.type = 'application/json';
-	try {
-		response = await ctx.app.db.collection(ctx.querystring).insert(ctx.request.body);
-		ctx.response.status = 200;
-	} catch (error) {
-		console.log(error)
-	}
-	console.log({response});
+	console.log(ctx.request.body);
+	itemToSave.number = ctx.request.body.item.number;
+	itemToSave.geo = [ ctx.request.body.item.location.lat, ctx.request.body.item.location.lng ];
+
+		response = await itemToSave.save((err, saved ) => {
+			if (err)
+				ctx.response = err;
+			console.log({saved});
+		});
+
+	ctx.response.status = 200;
+
 	return response;
 };
 
@@ -39,13 +46,29 @@ let getOneItem = async(ctx) => {
 	ctx.type = 'application/json';
 	let item = [];
 	try {
-		item = await ctx.app.db.collection('person').find({'id': ctx.params.id}).toArray(); //todo make it ultimate
+		item = await ctx.app.db.collection('person').find({'id': ctx.params.id}).toArray();
 		ctx.response.status = 200;
 	} catch (error) {
 		console.log(error)
 	}
 
-	console.log({item});
+	return item;
+};
+
+let getItemsWithinBox = async(ctx) => {
+	//fix how to select collection name in get on item
+	ctx.type = 'application/json';
+	let item = [ ctx.request.body.item.location.fromPoint, ctx.request.body.item.location.toPoint ];
+	let result = [];
+	try {
+		result = await ctx.app.db.collection('person').find({
+			location: { $geoWithin : { $box: [ item ] } }
+		}).toArray();
+		ctx.response.status = 200;
+	} catch (error) {
+		console.log(error)
+	}
+
 	return item;
 };
 
@@ -57,5 +80,5 @@ let getAndUpdateItem = async (ctx) => {
 };
 
 
-module.exports = { getHome, addOneItem, getAllItems, getOneItem, getAndUpdateItem };
+module.exports = { getHome, addOneItem, getAllItems, getOneItem, getItemsWithinBox, getAndUpdateItem };
 
